@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title> Smart Contract Essentials </title>
+
+    <meta name="author" content="Dhruvin Parikh">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="../reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/solarized.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? '../reveal.js/css/print/pdf.css' : '../reveal.js/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <style>
+      .reveal .slides h1, .reveal .slides h2, .reveal .slides h3 {
+        text-transform: none;
+      }
+
+      .two-column {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .two-column em {
+        margin: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+<!------------------------------------------------------->
+
+
+
+<section data-markdown><script type="text/template">
+
+### BCDV 1010 - Smart Contract Essentials
+
+#### Course Introduction
+
+*Dhruvin Parikh, May 2020*
+
+</script></section>
+
+<section id="course-description">
+  <h2>Introduction to Course</h2>
+    <ul>
+      <li>Provide deeper dive into development of smart contract</li>
+      <li>Analyzing applicable use-case and designing token-based solution</li>
+      <li>Create smart contracts using solidity and develop test suites</li>
+      <li>Hands-on experience using current industry accepted tools and frameworks.</li>
+    </ul>
+</section>
+
+<section id="course-outline" data-markdown><script type="text/template">
+    ### Course Outline
+    * ERC-EIP Landscape and token contract (self study)
+    * Contract Interaction
+    * Token economics
+    * Token contract development, deployment and testing
+    * Contract analysis tools
+</script></section>
+
+<section id="evaluation" > 
+    <h2>Evaluation System</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Assessment</th>
+          <th>Description</th>
+          <th>weightage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Participation</td>
+          <td>In class participation</td>
+          <td>10%</td>
+        </tr>
+        <tr>
+          <td>Lab Test 8 @3.75% (Best 8 out of 10)</td>
+          <td>Hands-on Test</td>
+          <td>30%</td>
+        </tr>
+        <tr>
+          <td>Assignment</td>
+          <td>Individual Assignment</td>
+          <td>30%</td>
+        </tr>
+        <tr>
+            <td>Final Exam</td>
+            <td>Short answer</td>
+            <td>30%</td>
+          </tr>
+      </tbody>
+    </table>
+  </section>
+
+<section id="announcement" data-markdown><script type="text/template">
+    ## Announcement
+    * Final Exam - June 4, 2020
+    * Individual assignment due - June 4, 2020
+</script></section>
+
+<section id="individual-assignment" data-markdown><script type="text/template">
+    ## Individual assignment
+    * Designing ERC-721 token based smart contract to solve real world problem.
+    * Development and deployment of smart contract
+    * Write test suites for the contract.
+</script></section>
+
+<section id="learning-outcome">
+  <h2>Learning outcome</h2>
+  <section data-transition="slide" >
+    <ul>
+      <li>
+        Understand appropriate data types, data structures and global variables available in solidity 
+      </li>
+      <li>
+        Declare functions and interact with deployed contract through Remix IDE. 
+      </li>
+      <li>
+        Analyze a given use case and design a smart-contract based solution
+      </li>
+    </ul>
+  </section>
+  <section data-transition="slide">
+    <ul>
+      <li>
+        Understand the architecture of the decentralized application
+      </li>
+      <li>
+        Learn how to design an application and make it decentralised
+      </li>
+      <li>
+        Design and implement a decentralised application in a given use case.
+      </li>
+    </ul>
+  </section>
+</section>
+
+<section data-markdown><script type="text/template">
+
+## End
+
+</script></section>
+
+
+
+<!------------------------------------------------------->
+
+
+      </div>
+
+    </div>
+
+    <script src="../reveal.js/lib/js/head.min.js"></script>
+    <script src="../reveal.js/js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+
+	math: {
+          mathjax: './lib/MathJax/MathJax.js',
+          config: 'TeX-AMS_SVG-full',
+	},
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: '../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: '../reveal.js/plugin/math/math.js', async: true },
+           // Zoom in and out with Alt+click
+           { src: "../reveal.js/plugin/zoom-js/zoom.js", async: true },
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
