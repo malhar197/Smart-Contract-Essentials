@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title> Tokeneconomics </title>
+
+    <meta name="author" content="Dhruvin Parikh">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="../../../reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../../../reveal.js/css/theme/solarized.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="../../../reveal.js/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? '../../../reveal.js/css/print/pdf.css' : '../../../reveal.js/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <style>
+      .reveal .slides h1, .reveal .slides h2, .reveal .slides h3 {
+        text-transform: none;
+      }
+
+      .two-column {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .two-column em {
+        margin: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+<!------------------------------------------------------->
+
+
+
+<section data-markdown><script type="text/template">
+
+### BCDV 1010 - Smart Contract Essentials
+
+#### Tokeneconomics
+
+*Dhruvin Parikh, May 2020*
+
+</script></section>
+
+<section data-background-iframe="https://dhruvinparikh93.github.io/#about"data-background-interactive>
+  <div
+    style="
+      position: absolute;
+      width: 40%;
+      right: 0;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5),
+        0 5px 25px rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.9);
+      color: #fff;
+      padding: 5px;
+      font-size: 20px;
+      text-align: center;
+    "
+  >
+    <h2>About The Presenter</h2>
+  </div>
+</section>
+
+<section>
+  <h2>Class Plan</h2>
+  <ul>
+    <li><a href="#/lesson-plan">Lesson Plan</a></li>
+    <li><a href="#/objectives">Objectives</a></li>
+    <li><a href="#/resources">Resources</a></li>
+    <li><a href="#/precap">Precap</a></li>
+  </ul>
+</section>
+
+<section id="lesson-plan" data-markdown><script type="text/template">
+  ## Lesson plan
+  * Crowd Sales
+  * Centralized v/s Decentralized Exchanges
+  * Time Locks
+  * Applying mechanism design to incentivisation schemes
+</script></section>
+
+<section id="objectives">
+  <h2>Objectives</h2>
+  <ul>
+    <li>Explain difference between centralized and decentralised exchnges</li>
+    <li>Create a crowdsale(ICO) token contract using ERC20 token</li>
+    <li>Implement time lock mechanism in a crowdsale contract</li>
+    <li>Apply principles of tokeneconomics to the token contract</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Crowd Sales</h2>
+  <ul>
+    <li>Air Drops</li>
+    <li>ICOs</li>
+    <li>IEOs</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Air Drops</h2>
+  <p>Airdrops is a process by which the company distributes its tokens to wallets of certain user, completely free of charge.</p>
+  <img src="airdrop.jpg" style="max-width: 50%; max-height: 60%;">
+</section>
+
+<section data-markdown><script type="text/template">
+  ## Purpose of Air Drop
+  * Generating Awareness
+  * Understanding Users
+  * Raising funds
+  * Rewarding or inspiring loyalty
+  * Wider distribution of token
+  * Hard forks
+</script></section>
+
+<section data-markdown=""><script type="text/template">
+  ## ICO - Initial Coin Offering
+  * ICO is crypto world’s public crowdsale. If a project wants to launch a new coin/dApp, conducting an ICO attracts investor to their ecosystem.
+  
+  * DApp developers can get required funding for their dApp through ICO crowdsale.
+  
+  * Anyone can become the investor in a project they are interested by purchasing the token of particular dApp and become a stakeholder of the project.
+</script></section>
+
+<section>
+  <h2>How ICO works</h2>
+  <img src="ico_work.jpg">
+</section>
+
+<section>
+  <h2>Launcing own ICO</h2>
+  <img src="ico_launch.jpg">
+</section>
+
+<section data-markdown><script type="text/template">
+  ## IEO - Intial Exchange Offering
+  * Also  known as ICO 2.0, IEOs enable establishment of a “trusted entity”. Trusted entity is the cryptocurrency exchange
+  * Benefits of IEOs
+  * Projects hosted by exchanges are legitimate.
+  * Tokens listed on exchange are immediately tradable
+  * Less Noise
+</script></section>
+
+<section data-markdown=""><script type="text/template">
+  ## Exchanges does
+  * Capital deposits
+  * Order books
+  * Order Matching
+  * Asset Exchange
+</script></section>
+
+<section>
+  <h2>Centralized v/s Decentralized Exchange</h2>
+</section>
+
+<section>
+  <h2>Decentralized Exchange</h2>
+  <section>
+    <ul>
+      <li>In most exchanges, only the asset exchange is decentralized, as the assets are cryptocurrencies deployed on the blockchain that no central entity controls.</li>
+    </ul>
+  </section>
+  <section>
+    <ul>
+      <li>Due to KYC and AML regulations, exchanges are often required to seek users’ identities for capital deposits, creating centralized record-collection and data-storage of personal information. Centralized exchanges give users permission to transact currencies, rather than creating a permissionless ecosystem.</li>
+    </ul>
+  </section>
+</section>
+
+<section>
+  <h2>Centralized and Decentralised Exchange</h2>
+  <img src="central-decentral-exchange.jpg">
+</section>
+
+<section>
+  <h2>Mechanism Design</h2>
+  <section>
+    <ul>
+      <li>a field in economics and game theory that takes an engineering approach
+        to designing economic mechanisms or incentives, toward desired
+        objectives, in strategic settings, where players act rationally
+      </li>  
+      <li>
+        Put simply, we create a set of desired outcomes, and generate an incentive structure that will cause rational actors to perpetuate those desired outcomes
+      </li>  
+  </section>
+  <section>
+    <ul>
+    <li> 
+      This differs from game theory, where we are looking to maximize utility in a finite set of rules (game)
+    </li>
+    <li>  
+      The grand vision of crypto economics is to extrapolate this success to embed crypto economic incentives into everything — transactions, computation, storage, prediction, power.
+    </li>
+  </ul>
+  </section>
+</section>
+
+<section>
+  <h2>Time locks</h2>
+</section>
+
+<section>
+  <h2>Lab 5</h2>
+</section>
+
+<section data-markdown><script type="text/template">
+
+## End
+
+</script></section>
+
+
+
+<!------------------------------------------------------->
+
+
+      </div>
+
+    </div>
+
+    <script src="../../../reveal.js/lib/js/head.min.js"></script>
+    <script src="../../../reveal.js/js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+
+	math: {
+          mathjax: './lib/MathJax/MathJax.js',
+          config: 'TeX-AMS_SVG-full',
+	},
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: '../../../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '../../../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '../../../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: '../../../reveal.js/plugin/math/math.js', async: true },
+           // Zoom in and out with Alt+click
+           { src: "../../../reveal.js/plugin/zoom-js/zoom.js", async: true },
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
