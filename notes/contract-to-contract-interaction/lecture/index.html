@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title> Contract to Contract Interaction </title>
+
+    <meta name="author" content="Dhruvin Parikh">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="../../../reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../../../reveal.js/css/theme/solarized.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="../../../reveal.js/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? '../../../reveal.js/css/print/pdf.css' : '../../../reveal.js/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <style>
+      .reveal .slides h1, .reveal .slides h2, .reveal .slides h3 {
+        text-transform: none;
+      }
+
+      .two-column {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .two-column em {
+        margin: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+<!------------------------------------------------------->
+
+
+
+<section data-markdown><script type="text/template">
+
+### BCDV 1010 - Smart Contract Essentials
+
+#### Contract to Contract Interaction
+
+*Dhruvin Parikh, May 2020*
+
+</script></section>
+
+<section data-background-iframe="https://dhruvinparikh93.github.io/#about"data-background-interactive>
+  <div
+    style="
+      position: absolute;
+      width: 40%;
+      right: 0;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5),
+        0 5px 25px rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.9);
+      color: #fff;
+      padding: 5px;
+      font-size: 20px;
+      text-align: center;
+    "
+  >
+    <h2>About The Presenter</h2>
+  </div>
+</section>
+
+<section>
+  <h2>Class Plan</h2>
+  <ul>
+    <li><a href="#/lesson-plan">Lesson Plan</a></li>
+    <li><a href="#/objectives">Objectives</a></li>
+    <li><a href="#/resources">Resources</a></li>
+    <li><a href="#/precap">Precap</a></li>
+  </ul>
+</section>
+
+<section id="lesson-plan" data-markdown><script type="text/template">
+  ## Lesson plan
+  * Contract-to-Contract interactions
+  * Common Use Cases
+  * Application Binary Interface (ABI)
+  * External Function Calls
+  * Contract Creation Using **`new`** keyword
+  * Common Security Bugs
+  * Lab
+</script></section>
+
+<section id="objectives">
+  <h2>Objectives</h2>
+  <ul>
+    <li>Able to interact with other contract when ABI is know/unknown</li>
+    <li>Able to explain application binary interface</li>
+    <li>Idea of known security bugs</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Contract to contract interactions</h2>
+  <p>A contract calling function of another contract</p>
+  <img src="./c-2-c.png" style="border:none; box-shadow: none;"/>
+</section>
+
+<section data-markdown><script type="text/template">
+  ## Common Use Cases
+    - Accessing data from another contract (e.g.oraclize)
+    - Contract Wallet (e.g. UniversalLogin)
+    - Meta Transaction (e.g. Gas Network Station)
+    - Upgradability (e.g. Crypto Exchange)
+    - Extensibility (e.g. ENS)
+</script></section>
+
+<section data-markdown><script type="text/template">
+  ## Interacting with contract using ABI(Application Binary Interface)
+  * **ABI** is function signature and arguments expressed as a byetcode
+  * A call to a function with parameters a,b,c is encoded as 
+  ```javascript
+  function_selector(f) encode(a,b,c)
+  ```
+</script>
+</section>
+
+<section>
+  <h2>Function Selector</h2>
+  <p>Function selector is the first 4 bytes of the keccak256 hash of the normalized function</p>
+</section>
+
+<section data-markdown><script type="text/template">
+ ## Compute function selector
+ * Using contract 
+ ```javascript
+ this.fun.selector
+ ```
+or 
+```javascript
+bytes4(keccak256(bytes("fun(bool)")))
+```
+ * Using ethers.js 
+ ```javascript
+ ethers.util.id("fun(bool)").slice(0,10)
+ ```
+ * Using web3.js 
+ ```javascript
+ web3.utils.keccak256("fun(bool)").slice(0,10)
+ ```
+</script></section>
+
+<section>
+  <h2>Argument Encoding</h2>
+  <p>Encoding of arguments based on set of rules</p>
+  <ul>
+    <li>argument types, e.g. uint, address, string, etc</li>
+    <li><b>Static</b> or <b>Dynamic</b> types</li>
+    <li>Bytes, String, Dynamic array are dynamic and all other types are static</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Static type encoding</h2>
+  <ol>
+    <li>Convert each argument value into a hex string of 32 bytes. If there is more than one argument, concatenate
+    <li>Refer to the solidity documentation for details of each static type encoding.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Dynamic type encoding</h2>
+  <p>Encode each dynamic type with 2 parts:</p>
+  <ol>
+    <li>Offset to data</li>
+    <li>The data portion is encoded as
+    <ul>
+      <li>length (32 bytes) </li>
+      <li>data (variable length)</li>
+    </ul>
+    </li>
+  </ol>
+</section>
+
+<section data-markdown><script type="text/template">
+  ## DEMO (ABI Encoding)
+  ```javascript
+  function fun(bool xy) public pure returns (bytes4) {
+    return (this.fun.selector);
+  }
+  ```
+  Call with `fun(true)` gives following ABI encoding:
+
+  ```
+  0xf1386ef70000000000000000000000000000000000000000000000000000000000000001
+  ```
+
+  * `0xf1386ef7` - function selector
+  * `0000...1` - value for xy
+</script></section>
+
+<section>
+  <h2>Events</h2>
+  <section>
+    <ul>
+      <li>Events are used by contracts to log state changes to the blockchain</li>
+      <li>Applications can query the blockchain for log entries of interest</li>
+    </ul>
+  </section>
+  <section>
+    <ul>
+      <li>Log entries are encoded using ABI format with the following fields:
+      <ul>
+        <li>Contract Address</li>
+        <li>Up to 4 Topics</li>
+        <ul>
+          <li>topic[0] - event selector (same as function selector). None for anonymous event</li>
+          <li>Topic[n] - indexed event parameters.</li>
+        </ul>
+        <li>Data</li>
+      </ul>
+    </li>
+  </ul>
+  </section>
+  <section>
+    <ul>
+      <li>Topics are indexed event parameters for speeding up event filtering</li>
+    </ul>
+  </section>
+</section>
+
+<section>
+  <h2>JSON ABI</h2>
+  <ul>
+    <li>The JSON format for a contract’s interface is an array of functions and/or event descriptions
+    <li>On Remix, the JSON ABI is available after the contract is compiled </li>
+    <li>Sample JSON ABI can be found on etherscan</li>
+    <li>JSON ABI is used by DApp to interact with contracts</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Lab - 1</h2>
+</section>
+
+<section data-markdown><script type="text/template">
+  ## External function calls
+  * A contract calling function in another contract
+  * The expressions `this.f(8);` and `c.f(2);`
+  * Special options: `.value(amount)` and `.gas(amount)`. 
+      * e.g. `this.f.value(10).gas(10)(8)`
+</script></section>
+
+<section>
+  <h2>Example (External function call)</h2>
+  <pre><code class="hljs" data-trim data-line-numbers="1-13">
+    contract PriceFeed {
+      uint private price = 42;
+      function getPrice() public view returns (uint) {
+        return price;
+      }
+    }
+
+    contract Consumer {
+      function callFeed(PriceFeed feed) public view returns(uint) {
+        return feed.getPrice();
+      }
+    }
+
+  </code></pre>
+</section>
+
+<section>
+  <h2>Interface</h2>
+  <pre><code class="hljs" data-trim data-line-numbers="1-9">
+    interface PriceFeed {
+      function getPrice() external view returns (uint);
+    }
+
+    contract Consumer {
+      function callFeed(PriceFeed feed) public view returns(uint) {
+        return feed.getPrice();
+      }
+    }
+
+  </code></pre>
+</section>
+
+<section data-markdown><script type="text/template">
+  ## Send Ether to Another Contract
+  ```javascript
+  <address payable>.transfer(uint256 amount)
+  ```
+      * Revert on error, gas limit 2300
+
+  ```javascript
+  <address payable>.send(uint256 amount) returns (bool)
+  ```
+      * Returns false on error, gas limit 2300
+
+  ```javascript
+  selfdestruct(address payable recipient)
+  ```
+      * Fallback function not executed
+</script></section>
+
+<section>
+  <h2>Example</h2>
+  <pre><code class="hljs" data-trim data-line-numbers="1-14">
+    contract Caller {
+      constructor() public payable {}
+      function doTransfer(address payable user) public {
+        user.transfer(1 ether);
+      }
+
+      function doSend(address payable user) public {
+        require(user.send( ether));
+      }
+
+      function kill(address payable target) public {
+        selfdestruct(arget);
+      }
+    }
+  </code></pre>
+</section>
+
+<section>
+  <h2>Lab - 2</h2>
+</section>
+
+<section data-markdown><script type="text/template">
+  ## Low Level External Function Calls
+  ### Used when the complete ABI is not available
+  * `call`
+  * `staticcall`
+  * `delegatecall`
+ </script></section>
+
+<section data-markdown><script type="text/template">
+  ## `call`
+
+  ```javascript
+  (bool success, bytes memory returnData) 
+  = feed.call.value(msg.value)(
+  abi.encodeWithSignature("set(uint256)", newPrice));
+  ```
+</script></section>
+
+<section data-markdown><script type="text/template">
+  ## `staticcall`
+  * Same as call, but will revert if the called function modifies the state in any way
+
+  ```javascript
+  (bool success, bytes memory returnData) 
+  = feed.staticcall(abi.encodeWithSignature("get()"));
+  ```
+</script></section>
+
+<section data-markdown><script type="text/template">
+  ## `delegatecall`
+  * It is basically the same as `call`, except that code is run in the context of the calling contract
+
+  ```javascript
+  (bool success, bytes memory returnData) =
+feed.delegatecall(abi.encodeWithSignature(
+"set(uint256)", newPrice));
+  ```
+</script></section>
+
+<section>
+  <h2>Context</h2>
+  <ul>
+    <li>Context is the data/states available to the function at the time of execution</li>
+    <li>EVM uses 3 areas to store data/states: storage, memory, stack</li>
+    <li>Other context includes account states and message call states</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Storage</h2>
+  <ul>
+    <li>A contract storage is persistent between function calls and transactions</li>
+    <li>It is a key-value mapping of 2<sup>256</sup> keys. Each value is 32 bytes</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Memory</h2>
+  <ul>
+    <li>Memory is volatile</li>
+    <li>It is mainly used to store data during execution</li>
+    <li>Each message call starts with a cleared memory</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Stack</h2>
+  <ul>
+    <li>All computations are performed on the stack</li>
+    <li>It has a maximum of 1024 elements</li>
+    <li>Access to stack is limited to the top elements</li>
+    <li>Access to elements by pop/push to stack</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Message Call</h2>
+  <ul>
+    <li>When a Solidity contract calls a function of another contract, it produces a message call.
+    <li>Message call is not a transaction; It does not get recorded in a block in the blockchain
+    <li>Every call has a sender, a recipient, a payload, a value, and an amount of gas.</li>
+    <li>The depth of message call is limited to less than 1024 levels.</li>
+    <li> You will receive an exception if this limit is exceeded</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Account</h2>
+  <ul>
+    <li>2 types of accounts:</li>
+    <ol style="list-style-type: lower-alpha;">
+      <li>Externally Owned Account (EOA)</li>
+      <li>Contract Account</li>
+    </ol>
+    <li>Every account consists of a balance, a nonce, bytecode, and stored data (storage). EOA has empty bytecode and storage</li>
+  </ul>
+</section>
+
+<section data-markdown=""><script type="text/template">
+  ## `this`
+  * **`this`** refers to the current contract if non-delegate call is made
+  * **`this`** refers to the caller contract if delegate call is made
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Caller
+| **`tx.origin`** | **`msg.sender`** |
+| ------------------------------------------------------------------------- |:------------------------------------------------------:|
+| **`tx.origin`** is the sender of the transaction (full call chain) | **`msg.sender`** is the sender of the current message call    |
+</script></section>
+
+<section>
+  <h2>Non-Delegate Message Call</h2>
+  <img src="non-delegate-call.png" style="box-shadow: none;border: none;">
+</section>
+
+<section>
+  <h2>Delegate Message Call</h2>
+  <img src="delegate-call.png" style="box-shadow: none;border: none;">
+</section>
+
+<section>
+  <h2>Lab - 3</h2>
+</section>
+
+<section data-markdown><script type="text/template">
+  ### Learnings from Lab - 3
+
+* Solidity generates code that causes EVM to save variable values in their declaration order.
+* Because variable **`first`** was declared first, it’s stored in slot 0
+
+```javascript
+contract Sample {
+  uint first // slot 0
+  uint second; // slot 1
+}
+```
+
+  **Slot** | **Value of**
+--- | --- 
+0 | first
+1 | second
+
+</script></section>
+
+<section>
+  <h2>Call context</h2>
+  <img src="call-context.png" style="border: none;box-shadow: none;">  
+</section>
+
+<section>
+  <h2>Delegatecall context</h2>
+  <img src="delegate-call-context.png" style="border: none;box-shadow: none;">  
+</section>
+
+<section data-markdown><script type="text/template">
+  ## Create Contract via **`new`**
+  * Contract create another contract using the `new` keyword
+  * Can send ether using **`.value()`** option
+  * **Cannot** limit gas using **`.gas()`** option
+</script></section>
+
+<section>
+  <h2>Example</h2>
+  <pre><code class="hljs" data-trim data-line-numbers="1-14">
+    contract Exchange {
+      address _token;
+      constructor (address token) public { _token = token;}
+    }
+
+    contract Factory {
+      mapping (address => address) public tokenToExchange;
+      function createExchange(address token) public {
+        Exchange exchange = new Exchange(token);
+        tokenToExchange[token] = address(exchange);
+      }
+    }
+  </code></pre>
+</section>
+
+<section data-markdown=""><script type="text/template">
+  ## Contract Address
+
+  * the contract address is calculated as 
+  ```javascript
+  keccak256(rlp([caller, nonce]))[12:]
+  ```
+  
+  * Javascript function:
+  ```javascript
+  ethers.utils.keccak256(ethers.utils.RLP.encode(
+  [address, nonce])).slice(26);
+  ```
+</script></section>
+
+<section>
+  <h2>Lab - 4</h2>
+</section>
+
+<section>
+  <h2>Common Security Bugs</h2>
+  <ul>
+    <li>Re-entrancy</li>
+    <li>Context exploitation (e.g. storage states,msg.sender)</li>
+    <li>External contract reference</li>
+    <li>Denial of Service</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Demo(Reentrancy bug)</h2>
+  <p>Best practice to avoid reentrancy is to finish all internal state change works before calling external function</p>
+</section>
+
+<section>
+  <h2>Demo(Denial Of Service)</h2>
+  <p>Denial of Service in this demo shows how the original function of the contract no longer work as intended.</p>
+</section>
+
+<section>
+  <h2>External Contract Reference with Selfdestruct</h2>
+  <p>Demo how the parity multi-sig wallet was destroyed due to a bug in the selfdestruct call. </p>
+</section>
+
+<section data-markdown><script type="text/template">
+
+## End
+
+</script></section>
+
+
+
+<!------------------------------------------------------->
+
+
+      </div>
+
+    </div>
+
+    <script src="../../../reveal.js/lib/js/head.min.js"></script>
+    <script src="../../../reveal.js/js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+
+	math: {
+          mathjax: './lib/MathJax/MathJax.js',
+          config: 'TeX-AMS_SVG-full',
+	},
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: '../../../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '../../../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '../../../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: '../../../reveal.js/plugin/math/math.js', async: true },
+           // Zoom in and out with Alt+click
+           { src: "../../../reveal.js/plugin/zoom-js/zoom.js", async: true },
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
