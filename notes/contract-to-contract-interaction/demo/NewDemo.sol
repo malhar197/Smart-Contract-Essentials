@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.6.0;
-pragma solidity ^0.6.0;
 
 contract tokenContract {
     uint public balance;
-}
- 
+} 
 
 contract Exchange {
   address _token;
