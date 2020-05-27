@@ -68,15 +68,13 @@
 <section>
   <h2>Class Plan</h2>
   <ul>
-    <li><a href="#/lesson-plan">Lesson Plan</a></li>
+    <li><a href="#/content">Content</a></li>
     <li><a href="#/objectives">Objectives</a></li>
-    <li><a href="#/resources">Resources</a></li>
-    <li><a href="#/precap">Precap</a></li>
   </ul>
 </section>
 
-<section id="lesson-plan" data-markdown><script type="text/template">
-  ## Lesson plan
+<section id="content" data-markdown><script type="text/template">
+  ## Content
   * Crowd Sales
   * Centralized v/s Decentralized Exchanges
   * Time Locks
@@ -202,12 +200,33 @@
     <li>How can you punish bad actors?</li>
   </ul>
 </section>
-  <section data-transition="slide`">
+  <section data-transition="slide">
     <h3>Price stability mechanism for MakerDAO</h3>
     <ul>
       <li>Target rate feedback mechanism
         <li>Sensitivity parameter</li>
         <li>Global settlement</li>
+    </ul>
+  </section>
+  <section data-transition="slide">
+    <h3>Target rate feedback mechanism</h3>
+    <ul>
+      <li>Stabilization mechanism that Maker token holders would have to activate in emergencies via the governance system.</li>
+      <li>It autonomously adjusted incentives both for Collateralized Debt Position (CDP) creation and for Dai holding, to bring the Dai market price closer to the target price by changing the target price.</li>
+    </ul>
+  </section>
+  <section data-transition="slide">
+    <h3>Sensitivity parameter</h3>
+    <ul>
+      <li>Token holders vote to determine trusted accounts</li>
+      <li>They also vote to set a parameter that determines the maximum amount oracles can change the protocol’s internal estimates of market prices of Dai and collateral in a given amount of time</li>
+    </ul>
+  </section>
+  <section data-transition="slide">
+    <h3>Global settlement Mechanism</h3>
+    <ul>
+      <li>Global settlement is an emergency shut-down function that helps stabilize coin.</li>
+      <li>It does so by freezing the Maker platform and stopping transactions.</li>
     </ul>
   </section>
 </section>
@@ -391,7 +410,7 @@
 </script></section>
 
 <section>
-  <h2>Centralized v/s Decentralized Exchange</h2>
+  <h2>Decentralized Exchange</h2>
 </section>
 
 <section>
@@ -409,8 +428,41 @@
 </section>
 
 <section>
-  <h2>Centralized and Decentralised Exchange</h2>
-  <img src="central-decentral-exchange.jpg">
+  <h2>Why <b>NOT</b> Centralised Exchange?</h2>
+  <section data-transition="slide">
+  <ul>
+    <li>Unreliable and untrustworthy</li>
+    <li>Modern financial system, this transgressions happen to quickly</li>
+    <li>CEX compromisation may put millions of  users’ fund at risk at a given time.</li>
+    <li>Multiple people have access to customer’s fund. “Three can keep a secret if two are dead”.</li>
+  </ul>
+  </section>
+  <section data-transition="slide">
+  <ul>
+    <li>High-frequency trading, front running or hidden orders</li>
+    <li>May need to go physically close to exchanges as trading bots make decisions so quickly.</li>
+    <li>Fractional[frictional] reserve banking</li>
+    <li>“Big brother is watching”</li>
+  </ul>
+</section>
+</section>
+
+<section>
+  <h2>Decentralized exchange prons</h2>
+  <section data-transition="slide">
+    <ul>
+      <li>Any attack or failure impacts only one user and their funds.</li>
+      <li>User has control over their own security</li>
+      <li>Hacking and individual user or exchange occurs at fixed cost.</li>
+    </ul>
+  </section>
+  <section data-transition="slide">
+    <ul>
+      <li>Level playing field to traders</li>
+      <li>Spin up your own exchange by running an API node locally - location-neutral</li>
+      <li>A user may keep more than one account and there is no way of tying transactions done through different account to your identity hencing it gives false sense of privacy.</li>
+    </ul>
+  </section>
 </section>
 
 <section id="game-theory">
@@ -455,7 +507,7 @@
 </section>
 
 <section>
-  <h2>Lab 5</h2>
+  <h2>Lab 2</h2>
 </section>
 
 <section data-markdown><script type="text/template">
