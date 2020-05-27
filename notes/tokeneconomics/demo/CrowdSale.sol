@@ -3,7 +3,7 @@
 pragma solidity ^0.6.0;
 
 /* A demo contract for Crowd Sale
- * Run the test as follow:
+ * Run the test as follows:
  * 1) create MyCoin with account A
  * 2) create GBCCrowdSale(1, account B, MyCoin's contract address) with account C
  * 3) run MyCoin.sendCoin(GBCCrowdsale's contract address, 100) with account A
