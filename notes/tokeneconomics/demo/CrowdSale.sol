@@ -6,10 +6,10 @@ pragma solidity ^0.6.0;
  * Run the test as follow:
  * 1) create MyCoin with account A
  * 2) create GBCCrowdSale(1, account B, MyCoin's contract address) with account C
- * 5) run MyCoin.sendCoin(GBCCrowdsale's contract address, 100) with account A
- * 6) run GBCCrowdSale.buyCoin(account D) with 40 wei and account C
- * 7) check GBCCrowdSale.getCoinBalance(GBCCrowdSale), GBCCrowdSale.getCoinBalance(account D)
- * 8) check balance of account B 
+ * 3) run MyCoin.sendCoin(GBCCrowdsale's contract address, 100) with account A
+ * 4) run GBCCrowdSale.buyCoin(account D) with 40 wei and account C
+ * 5) check GBCCrowdSale.getCoinBalance(GBCCrowdSale), GBCCrowdSale.getCoinBalance(account D)
+ * 6) check balance of account B 
  */
 
 contract MyCoin {
