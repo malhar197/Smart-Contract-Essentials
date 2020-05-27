@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title> Low level calls </title>
+
+    <meta name="author" content="Dhruvin Parikh">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="../../../reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../../../reveal.js/css/theme/solarized.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="../../../reveal.js/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? '../../../reveal.js/css/print/pdf.css' : '../../../reveal.js/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <style>
+      .reveal .slides h1, .reveal .slides h2, .reveal .slides h3 {
+        text-transform: none;
+      }
+
+      .two-column {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .two-column em {
+        margin: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+<!------------------------------------------------------->
+
+
+
+<section data-markdown><script type="text/template">
+
+### BCDV 1010 - Smart Contract Essentials
+
+#### Low level calls
+
+*Dhruvin Parikh, May 2020*
+
+</script></section>
+
+<section data-markdown><script type="text/template">
+  ## Low Level External Function Calls
+  ### If ABI is unknown use :
+  * `call`
+  * `staticcall`
+  * `delegatecall`
+ </script></section>
+
+ <section data-markdown><script type="text/template">
+    ## Caller
+    | **`tx.origin`** | **`msg.sender`** |
+    | ------------------------------------------------------------------------- |:------------------------------------------------------:|
+    | **`tx.origin`** is the sender of the transaction (full call chain) | **`msg.sender`** is the sender of the current message call    |
+    </script></section>
+
+ <section>
+    <h2>Context</h2>
+    <ul>
+      <li>Context is the data/states available to the function at the time of execution</li>
+      <li>EVM uses 3 areas to store data/states: storage, memory, stack</li>
+      <li>Other context includes account states and message call states</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Non-Delegate Message Call</h2>
+    <img src="non-delegate-call.png" style="box-shadow: none;border: none;">
+  </section>
+
+  <section>
+    <h2>Call context</h2>
+    <img src="call-context.png" style="border: none;box-shadow: none;">  
+  </section>
+
+ <section data-markdown><script type="text/template">
+    ## `call`
+</script></section>
+
+<section data-markdown><script type="text/template">
+    ## `call`
+  
+    ```javascript
+    (bool success, bytes memory returnData) 
+    = feed.call.value(msg.value)(
+    abi.encodeWithSignature("set(uint256)", newPrice));
+    ```
+  </script></section>
+
+<section data-markdown><script type="text/template">
+    ## `call`
+    * Returns `false` if the subcall encounters an exception, otherwise it returns `true`
+</script></section>
+
+<section data-markdown><script type="text/template">
+    ## `staticcall`
+</script></section>
+
+<section data-markdown><script type="text/template">
+    ## `staticcall`
+    * Same as call, but will revert if the called function modifies the state in any way
+  
+    ```javascript
+    (bool success, bytes memory returnData) 
+    = feed.staticcall(abi.encodeWithSignature("get()"));
+    ```
+  </script></section>
+
+<section data-markdown><script type="text/template">
+    ## `staticcall`
+    * Enforces read-only call at runtime.
+    * Do **NOT** use , if your contract’s state change requires a successful state change in another contract.
+    * Use if a contract’s state change depends on reading data from another contract.
+    * Returns `false` if subcall encounters exception, `true` otherwise
+</script></section>
+
+<section>
+    <h2>Delegate Message Call</h2>
+    <img src="delegate-call.png" style="box-shadow: none;border: none;">
+  </section>
+  
+  <section>
+    <h2>Delegatecall context</h2>
+    <img src="delegate-call-context.png" style="border: none;box-shadow: none;">  
+  </section>
+
+<section data-markdown><script type="text/template">
+    ## `delegatecall`
+</script></section>
+
+<section data-markdown><script type="text/template">
+    ## `delegatecall`
+    * It is basically the same as `call`, except that code is run in the context of the calling contract
+  
+    ```javascript
+    (bool success, bytes memory returnData) =
+  feed.delegatecall(abi.encodeWithSignature(
+  "set(uint256)", newPrice));
+    ```
+  </script></section>
+
+<section data-markdown><script type="text/template">
+    ## `delegatecall`
+    * The context is on Caller contract, all state change logics reflect on Caller’s storage.
+    * The context is **NOT** on the user who execute caller contract but on caller contract.
+</script></section>
+
+<section data-markdown><script type="text/template">
+
+## End
+
+</script></section>
+
+
+
+<!------------------------------------------------------->
+
+
+      </div>
+
+    </div>
+
+    <script src="../../../reveal.js/lib/js/head.min.js"></script>
+    <script src="../../../reveal.js/js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+
+	math: {
+          mathjax: './lib/MathJax/MathJax.js',
+          config: 'TeX-AMS_SVG-full',
+	},
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: '../../../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '../../../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '../../../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: '../../../reveal.js/plugin/math/math.js', async: true },
+           // Zoom in and out with Alt+click
+           { src: "../../../reveal.js/plugin/zoom-js/zoom.js", async: true },
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
