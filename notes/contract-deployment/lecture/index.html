@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title> Contract Deployment </title>
+
+    <meta name="author" content="Dhruvin Parikh">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="../../../reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../../../reveal.js/css/theme/simple.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="../../../reveal.js/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? '../../../reveal.js/css/print/pdf.css' : '../../../reveal.js/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <style>
+      .reveal .slides h1, .reveal .slides h2, .reveal .slides h3 {
+        text-transform: none;
+      }
+
+      .two-column {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .two-column em {
+        margin: 20px;
+      }
+
+      .credits {
+          font-size: small;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+<!------------------------------------------------------->
+
+
+
+<section data-markdown><script type="text/template">
+
+### BCDV 1010 - Smart Contract Essentials
+
+#### Contract Deployment
+
+*Dhruvin Parikh, May 2020*
+
+</script></section>
+
+<section id="content" data-markdown><script type="text/template">
+  ## Content
+  * Review of ERC20 standard
+  * Deploy the contract to a testnet
+  * Verify the contract in etherscan
+  * Manually test the contract
+  * Lab
+</script></section>
+
+<section>
+  <h2>ERC20 Standard <a href="https://eips.ethereum.org/EIPS/eip-20">https://eips.ethereum.org/EIPS/eip-20</a></h2>
+  <ul>
+    <li>Standard for transferring tokens and
+      approving tokens to be spent by another
+      on-chain contract-development
+    </li>
+  </ul>
+</section>
+
+<section data-markdown><script type="text/template">
+  ### ERC-20 Mandatory Functions
+  * **`totalSupply`**: total token supply
+  * **`balanceOf`**: tokens an account own
+  * **`Transfer`**: transfer token from msg.sender to another account
+  * **`transferFrom`**: transfer token on behalf of other account
+  * **`approve`**: approve another account to transfer token from your account
+  * **`allowance`**: how many token can an approved account transfer from your account
+</script></section>
+
+<section data-markdown><script type="text/template">
+  ## ERC-20 Optional Functions
+  * These are optional as they are mainly for improved
+  usability and display purposes on applications
+   - **`name()`**: a descriptive name of the token
+   - **`symbol()`**: a symbol of token
+   - **`decimals()`**: number of decimal the token uses. E.g. 8
+  decimals will divide the token amount by 108 to get it’s user representation
+</script></section>
+
+<section data-markdown><script type="text/template">
+  ## ERC-20 Events
+  * **`Transfer`**:
+   * notification of token transfer
+   * Event fires as part of the transfer and transferFrom calls
+  * **`Approval`**:
+   * notification of token approval
+   * Event fires as part of the approve all
+  * Events are only accessible by off-chain application; contracts do not have
+  access to events
+</script></section>
+
+<section>
+  <h2>Approve Attack vector</h2>
+  <ul>
+    <li>If an account changes approval from 5 to 3, due to front running, the attacker can transfer 8 tokens</li>
+    <li>Work around is to change approval from 5 to 0 first. If no attack, change to 2 later. Otherwise, leave approval at 0.</li>
+    <li>The worse case in this approach is lose 5 tokens</li>
+    <li>Openzeppelin uses decrease/increase as solution</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Metamask</h2>
+  <div class="two-column">
+    <div>
+      <img src="Metamask-dashboard.png" width="300px" style="border:none; box-shadow: none;">
+    </div>
+    <div style="width: 600px;">
+      <ul>
+        <li>Ethereum Wallet plugin for chrome</li>
+        <li>A wallet allows you to manage your crypto assets and interact with smart contracts</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Create/Import Account</h2>
+  <ul>
+    <li>Create Account</li>
+    <li>Import Account</li>
+    <ul>
+      <li>Private Key</li>
+      <li>JSON wallet file</li>
+    </ul>
+  </ul>
+</section>
+
+<section>
+  <h2>What is a JSON Wallet File?</h2>
+  <ul>
+    <li>It includes the encrypted private key, with information about how it was encrypted</li>
+    <li>You can use <a target="_blank" href="https://ethers.io/">https://ethers.io/</a> to generate the wallet file</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Testnet</h2>
+  <ul>
+    <li>Testnet is a blockchain network for testing purposes</li>
+      <li>The following article has a good description of each testnet:
+      <ul>
+        <li><a target="_blank" href="https://dev.to/5chdn/the-grli-testnet-proposal---a-call-for-partic
+          ipation-58pf">https://dev.to/5chdn/the-grli-testnet-proposal---a-call-for-partic
+          ipation-58pf</a></li>
+      </ul>
+  </ul>
+</section>
+
+<section>
+  <h2>Faucets</h2>
+  <ul style="list-style-type: none;">
+    <li>Faucets give testnet ether, to be used for testing</li>
+    <ul>
+      <li>Ropsten - <a target="_blank" href="https://faucet.ropsten.be/">https://faucet.ropsten.be/</a></li>
+        <li>Rinkeby - <a target="_blank" href="https://faucet.rinkeby.io/">https://faucet.rinkeby.io/</a></li>
+        <li>Kovan - <a target="_blank" href="https://faucet.kovan.network/">https://faucet.kovan.network/</a></li>
+        <li>Goerli - <a target="_blank" href="https://goerli-faucet.slock.it/">https://goerli-faucet.slock.it/</a></li>
+        <li>All - <a target="_blank" href="https://faucets.blockxlabs.com">https://faucets.blockxlabs.com</a></li>
+    </ul>
+  </ul>
+</section>
+
+<section>
+  <h2>Blockchain Explorer</h2>
+  <ul>
+    <li>Blockchain Explorer is used to lookup a blockchain for information about account, transaction, block, ens name, etc.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Etherscan</h2>
+  <ul style="list-style-type: none;">
+    <li>Is a blockchain explorer</li>
+    <ul>
+      <li>Mainnet : <a target="_blank" href="https://etherscan.io/">https://etherscan.io/</a></li>
+    </ul>
+    <ul>
+      <li>Testnets</li>
+      <ul>
+        <li><a target="_blank" href="https://ropsten.etherscan.io/">https://ropsten.etherscan.io/</a></li>
+        <li><a target="_blank" href="https://rinkeby.etherscan.io/">https://rinkeby.etherscan.io/</a></li>
+        <li><a target="_blank" href="https://goerli.etherscan.io/">https://goerli.etherscan.io/</a></li>
+        <li><a target="_blank" href="https://kovan.etherscan.io/">https://kovan.etherscan.io/</a></li>
+      </ul>
+    </ul>
+  </ul>
+</section>
+
+<section>
+  <h2>Verify Contract</h2>
+  <ul>
+    <li>After a contract is verified on etherscan, the source code is available and you can read or write to the contract on etherscan</li>
+    <li>Demo for verifying a contract</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Lab</h2>
+  <ul>
+    <li>Create an ERC20 token contract</li>
+    <li>Deploy to a testnet</li>
+    <li>Verify the contract on etherscan</li>
+    <li>Manually perform tests on the contract, make sure there are approve, transfer, transferFrom transactions</li>
+    <li>Submit the etherscan link with the contract address to blackboard</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Details of token</h2>
+  <img src="etherscan.svg" width="500px" style="border: none;box-shadow: none;">
+</section>
+
+<section>
+  <h2>What did we observe?</h2>
+  <img src="etherscan-description.svg" width="600px" style="border: none;box-shadow: none;">
+</section>
+
+<section>
+  <h2>Sample Use case for <code>approve</code> and <code>transferFrom</code></h2>
+  <ul>
+    <li>A contract that will accept WETH tokens and issue another tokens</li>
+    <li>Demonstrate the use of ERC20 standard approve and transferFrom use case</li>
+  </ul>
+</section>
+
+<section>
+<h2>Demo of TokenSale</h2>
+<section data-transition="slide">
+<ul>
+  <li>Use account 1 to deploy token contract</li>
+  <li>Use account 1 to mint token</li>
+  <li>Use account 2 to deploy the TokenSale contract using account 1 as the wallet. <a href="#">TokenSale.sol</a></li>
+</ul>
+</section>
+<section data-transition="slide">
+<ul>
+  <li>Use account 1 to approve tokenSale to transfer tokens</li>
+  <li>Use account 3 to purchase WETH token</li>
+  <li>Use account 3 to approve tokenSale contract to spend <b>WETH</b></li>
+  <li>Use account 3 to call <code>tokenSale.claimToken()</code></li>
+</ul>
+</section>
+</section>
+
+<section data-markdown><script type="text/template">
+
+## End
+
+</script></section>
+
+
+
+<!------------------------------------------------------->
+
+
+      </div>
+
+    </div>
+
+    <script src="../../../reveal.js/lib/js/head.min.js"></script>
+    <script src="../../../reveal.js/js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+
+	math: {
+          mathjax: './lib/MathJax/MathJax.js',
+          config: 'TeX-AMS_SVG-full',
+	},
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: '../../../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '../../../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '../../../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: '../../../reveal.js/plugin/math/math.js', async: true },
+           // Zoom in and out with Alt+click
+           { src: "../../../reveal.js/plugin/zoom-js/zoom.js", async: true },
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
