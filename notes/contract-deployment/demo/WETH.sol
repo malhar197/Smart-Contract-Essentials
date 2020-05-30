@@ -1,11 +1,11 @@
-//SPDX-License-Identifier: MIT
-
-/**
- *Submitted for verification at Etherscan.io on 2020-01-15
- *Deploy at 0x33f0641Eb95F9465C67e9208Cb9ec23f5AB384EC on Ropsten
-*/
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.6.0;
+
+/*
+* deployed at 0x33f0641Eb95F9465C67e9208Cb9ec23f5AB384EC on ropsten
+* re-deployed at 0xB72c3BdbCe79fE3dD5460735B659325072e2346E on ropsten
+*/
 
 contract WETH {
     string public name = "Wrapped Ether";
@@ -25,7 +25,7 @@ contract WETH {
     }
 
     function deposit() public payable {
-        balances[msg.sender] = msg.value;
+        balances[msg.sender] = balances[msg.sender] + msg.value;
         emit Deposit(msg.sender, msg.value);
     }
     
