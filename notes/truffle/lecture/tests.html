@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 
-    <title> Testing smart contracts </title>
+    <title> Solidity Smart Contract Testing </title>
 
     <meta name="author" content="Dhruvin Parikh">
 
@@ -63,7 +63,7 @@
 
 ### BCDV 1010 - Smart Contract Essentials
 
-#### Testing smart contracts
+#### Solidity Smart Contract Testing
 
 *Dhruvin Parikh, May 2020*
 
@@ -74,11 +74,146 @@
     <ul>
         <li>Testing solidity smart contract</li>
         <li>Writing tests in javascript and solidity</li>
-        <li>Mocha/chai</li>
-        <li>bignumber.js</li>
-        <li>trufflea-ssertions</li>
-        <li>Openzeppeling helper contracts</li>
+        <li>Openzeppelin helper contracts</li>
     </ul>
+</section>
+
+<section>
+  <h2>Testing solidity smart contracts</h2>
+  <ul>
+    <li>Testing is the primary job of developer</li>
+    <li>Little time spend writing solidity code and more utised writing contract</li>
+  </ul>
+</section>
+
+<section>
+  <h2>TDD Overview</h2>
+  <ul>
+    <li>Fully understand the requirement</li>
+    <li>Create automated tests that test the requirement</li>
+    <li>Create the coding logic -- test it by running the automated test(s)</li>
+    <li>Once the automated test(s) pass, the coding then fulfills the requirement</li>
+    <li>Refactor the code for better maintainability, run the automated test(s) again to ensure it still works</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Functional Tests</h2>
+  <ul>
+    <li><b>Unit tests</b> : Keep units small, test single or very small groups of functions/methods or parameters at a time.
+    <li><b>Integration tests</b> : Interact with external class, module or datasource.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Unit tests</h2>
+  <ul>
+    <li>Good unit tests</li>
+    <li>Run fast (they have short setups, run times, and breakdowns).</li>
+    <li>Run in isolation (you should be able to reorder them).</li>
+    <li>Use data that makes them easy to read and to understand.</li>
+    <li>Use real data (e.g. copies of production data) when they need to.</li>
+    <li>Represent one step towards your overall goal.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Integration tests</h2>
+  <ul>
+    <li>Good for uncovering whether all the parts work together or not.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Test frameworks (Truffle use them under hood)</h2>
+  <ul>
+    <li><b>Mocha</b> : <a href="https://mochajs.org/">https://mochajs.org/</a> - Javascript testing framework</li>
+    <li><b>Chai</b> : <a href="https://www.chaijs.com/">https://www.chaijs.com/</a> - Javascript Assertion library</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Hooks in Mocha</h2>
+  <ul>
+    <li><code>before()</code> — Runs once before the first test case in the block</li>
+    <li><code>beforeEach()</code> — Runs before each test case</li>
+      <li><code>afterEach()</code> — Runs after each test case</li>
+      <li><code>after()</code> — Runs once after the last test case in the block</li>
+  </ul>
+  <ul style="list-style: none;">
+    <li>Sequence of Hooks</li>
+    <ul style="list-style: none;">
+      <li><code>before() -> beforeEach() -> test() -> afterEach() -> after()</code></li>
+    </ul>
+  </ul>
+</section>
+
+<section>
+  <h2>Coverage</h2>
+  <ul style="list-style-type: none;">
+    <li>Given the nature of smart contract development, where data is literal value, testing practises needs to be stringent. 100% code coverage is not maximum to aim, its must.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Achieving 100% Coverage</h2>
+  <ul>
+    <li>Positive test</li>
+    <ul>
+      <li>Test that code behaves as expected when valid data is given.</li>
+    </ul>
+    <li>Negative tests</li>
+    <ul>
+      <li>Test that code behaves as expected when invalid data is given.</li>
+    </ul>
+  </ul>
+</section>
+
+<section>
+  <h2>Solidity code coverage tools</h2>
+  <ul>
+    <li>solidity-coverage - <a href="https://github.com/sc-forks/solidity-coverage">https://github.com/sc-forks/solidity-coverage</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>TDD in solidity using truffle</h2>
+</section>
+
+<section>
+  <h2>Exercise</h2>
+  <ul>
+    <li><a target="_blank" href="https://github.com/GeorgeBrownCollege-Toronto/Smart-Contract-Essentials/blob/master/notes/truffle/demo/tdd-solidity-truffle.md">Tutorial for TDD in blockchain using solidity</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Coding Demo</h2>
+  <ul>
+    <li><a target="_blank" href="https://georgebrowncollege-my.sharepoint.com/personal/101035720_georgebrown_ca/_layouts/15/onedrive.aspx?id=%2Fpersonal%2F101035720%5Fgeorgebrown%5Fca%2FDocuments%2FTruffle%2Dtest%2Ffaucet%2Dtests%2Emov&parent=%2Fpersonal%2F101035720%5Fgeorgebrown%5Fca%2FDocuments%2FTruffle%2Dtest&originalPath=aHR0cHM6Ly9nZW9yZ2Vicm93bmNvbGxlZ2UtbXkuc2hhcmVwb2ludC5jb20vOnY6L2cvcGVyc29uYWwvMTAxMDM1NzIwX2dlb3JnZWJyb3duX2NhL0VVYm5HaWNaSWw1SW1sOURzVFdkUU04QlZpTVlBVEZ6dWZ5RG01MjBqUXVvR0E_cnRpbWU9cUR6TzYyQUcyRWc">Faucet test in truffle</a></li>
+    <li><a target="_blank" href="https://georgebrowncollege-my.sharepoint.com/:v:/g/personal/101035720_georgebrown_ca/EfICbiNVXdRLvymjoynRDqABXm_2H9Pg8OK6qLvZOHeEgw?e=8diYL2">ERC20 tests in truffle</a></li>
+    <li><a target="_blank" href="https://georgebrowncollege-my.sharepoint.com/:v:/g/personal/101035720_georgebrown_ca/EeBExsl-r7ZBu3YG__hLLmoBTeI-WKWCacd7kk_OlGdf2w?e=eUlznl">ERC20 solidity coverage</a></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Read their test suites</h2>
+  <ul>
+  <li><a target="_blank" href="https://github.com/trufflesuite/devcon5-honeypot-exploration">devcon5-honey-exploration</a></li>
+  <li><a target="_blank" href="https://github.com/0xProject/dev-tools-truffle-example">dev-tools-truffle-example</a></li>
+  <li><a target="_blank" href="https://github.com/OpenZeppelin/openzeppelin-contracts">openzeppelin-contracts</a></li>
+</ul>
+</section>
+
+<section>
+  <h2>Tools</h2>
+  <ul>
+    <li><a href="https://github.com/sc-forks/solidity-coverage">https://github.com/sc-forks/solidity-coverage</a></li>
+    <li><a href="https://protofire.github.io/solhint/">https://protofire.github.io/solhint/</a></li>
+    <li><a href="https://github.com/OpenZeppelin/openzeppelin-test-helpers">https://github.com/OpenZeppelin/openzeppelin-test-helpers</a></li>
+    <li><a href="https://sol-profiler.com/">https://sol-profiler.com/</a></li>
+    <li><a href="https://github.com/cgewecke/eth-gas-reporter#readme">https://github.com/cgewecke/eth-gas-reporter#readme</a></li>
+  </ul>
 </section>
 
 <section data-markdown><script type="text/template">
