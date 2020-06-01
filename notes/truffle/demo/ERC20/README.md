@@ -1,4 +1,4 @@
-# FAUCET Contract USING TRUFFLE
+# ERC20 Contract USING TRUFFLE
 
 ## Getting Started
 
