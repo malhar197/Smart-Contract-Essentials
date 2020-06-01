@@ -113,7 +113,7 @@ contract Calculator {
         }
 
         function subNumber(uint val) public {
-            number -= number;
+            number -= val;
         }
 }
 ```
@@ -121,36 +121,41 @@ contract Calculator {
 Test Cases using promise
 
 ```js
-    const calculator = artifacts.require("./Calculator");
-    contract("Calculator", (accounts) => {
-        let contractInstance;
-        // Create instance before all est cases
-        before(()=>{
-            Calculator.deployed().then(calInstance() => {
-                contractInstance = calInstance;
-                console.log("Creating instance for all test cases");
-            })
-        });
+const Calculator = artifacts.require("./Calculator");
 
-        it("should return 10",()=>{
-            contractInstance.getVal.call().then((result) => {
-                assert.equal(result.valueOf(), 10, "Test failed : should return 10");
-            })
-        });
+contract("Calculator", (accounts) => {
+  let contractInstance;
+  // Create instance before all est cases
+  before(() => {
+    Calculator.deployed().then((calInstance) => {
+      contractInstance = calInstance;
+      console.log("Creating instance for all test cases");
+    });
+  });
 
-        it("should return 23",() => {
-            contractInstance.addNumber(10);
-            contractinstance.subNumber(7);
-            contractInstance.getVal.call().then((result) => {
-                assert.equal(result.valueOf(), 13, "Test failed : should return 13");
-                contractInstance.addNumber(10);
-                return contractInstance.getVal.call()
-            }).then((result) => {
-                assert.equal(result.valueOf(),23, "Test failed : should return 23");
-            })
-        })
-    })
+  it("should return 10", () => {
+    contractInstance.getVal.call().then((result) => {
+      assert.equal(result.valueOf(), 10, "Test failed : should return 10");
+    });
+  });
+
+  it("should return 23", () => {
+    contractInstance.addNumber(10);
+    contractInstance.subNumber(7);
+    contractInstance.getVal
+      .call()
+      .then((result) => {
+        assert.equal(result.valueOf(), 13, "Test failed : should return 13");
+        contractInstance.addNumber(10);
+        return contractInstance.getVal.call();
+      })
+      .then((result) => {
+        assert.equal(result.valueOf(), 23, "Test failed : should return 23");
+      });
+  });
+});
 ```
+
 And we can always simplify our code structure using Async-Await.
 
 ```js
@@ -158,41 +163,42 @@ And we can always simplify our code structure using Async-Await.
 
 const Calculator = artifacts.require("Calculator");
 
-contract('Calculator', (accounts) => {
-    let contractInstance;
+contract("Calculator", (accounts) => {
+  let contractInstance;
 
-    before(async () => {
-        contractInstance = await Calculator.new(10);
-        console.log("Creating instances for all test cases!");
-    });
+  before(async () => {
+    contractInstance = await Calculator.new(10);
+    console.log("Creating instances for all test cases!");
+  });
 
-    it("should return 10", async () => {
-        const result = await contractInstance.getVal.call();
-        assert.equal(await result.valueOf(), 10, "Test failed : should return 10")
-    });
+  it("should return 10", async () => {
+    const result = await contractInstance.getVal.call();
+    assert.equal(await result.valueOf(), 10, "Test failed : should return 10");
+  });
 
-    it("should return 23", async () => {
-        contractInstance.addNumber(10);
-        contractinstance.subNumber(7);
-        let result = await contractInstance.getVal.call();
-        assert.equal(result.valueOf(),13, "Test failed : should return 13");
-        await contractInstance.addNumber(10);
-        result = await contractInstance.getVal.call();
-        assert.equal(result.valueOf(),23, "Test failed : should return 23");
-    })
-})
+  it("should return 23", async () => {
+    contractInstance.addNumber(10);
+    contractInstance.subNumber(7);
+    let result = await contractInstance.getVal.call();
+    assert.equal(result.valueOf(), 13, "Test failed : should return 13");
+    await contractInstance.addNumber(10);
+    result = await contractInstance.getVal.call();
+    assert.equal(result.valueOf(), 23, "Test failed : should return 23");
+  });
+});
 ```
 
-Output : 
+Output :
 
 ![coverage](./coverage-output.png)
 
 Summary:
-* Test driven development is a process of modifying code in order to pass a test designed previously.
-* It more emphasis on production code rather than test case design.
-* It is sometimes known as &quot;Test First Development.&quot;
-* TDD includes refactoring a code i.e. changing/adding some amount of code to
-the existing code without affecting the behavior of the code.
-* TDD when used, the code becomes clearer and simple to understand.
+
+- Test driven development is a process of modifying code in order to pass a test designed previously.
+- It more emphasis on production code rather than test case design.
+- It is sometimes known as &quot;Test First Development.&quot;
+- TDD includes refactoring a code i.e. changing/adding some amount of code to
+  the existing code without affecting the behavior of the code.
+- TDD when used, the code becomes clearer and simple to understand.
 
 Truffle uses the [Mocha](https://mochajs.org/) testing framework as well as [Chai](https://www.chaijs.com/) assertion library under the hood.
