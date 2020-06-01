@@ -45,7 +45,7 @@ Steps need to be taken
 ```js
 const Calculator = artifacts.require("./Calculator.sol");
 contract("Calculator", (accounts) => {
-  it("should assert true", function (dome) {
+  it("should assert true", function (done) {
     const calculator = Calculator.deployed();
     assert.isTrue(true);
     done();
