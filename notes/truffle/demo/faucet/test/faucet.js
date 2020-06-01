@@ -5,61 +5,67 @@ const Faucet = artifacts.require("Faucet");
 contract("Faucet", (accounts) => {
   const creator = accounts[0];
   const donor = accounts[1];
-  const benificiary = accounts[2];
+  const beneficiary = accounts[2];
   const withdrawalAmount = 200000000000000000;
   const refillAmount = 1000000000000000000;
-  let faucetInstance;
+  let facuetInstance;
 
-  describe("positive", () => {
-    before(async () => {
-      faucetInstance = await Faucet.deployed({ from: creator });
-      await web3.eth.sendTransaction({
-        from: donor,
-        to: faucetInstance.address,
-        value: refillAmount,
-      });
-      const balance = await web3.eth.getBalance(faucetInstance.address);
-      assert.equal(refillAmount, balance, "It should be equal");
+  before(async () => {
+    facuetInstance = await Faucet.deployed({ from: creator });
+    await web3.eth.sendTransaction({
+      from: donor,
+      to: facuetInstance.address,
+      value: refillAmount,
     });
+    const balance = await web3.eth.getBalance(facuetInstance.address);
+    assert.equal(
+      refillAmount,
+      balance,
+      "The balance of contract should be as expected"
+    );
+  });
 
-    it("it should be able to withdraw using withdraw()", async () => {
-      const beneficiaryBalance = await web3.eth.getBalance(benificiary);
-      const tx = await faucetInstance.withdraw(
-        web3.utils.toBN(withdrawalAmount),
-        { from: benificiary }
-      );
-      // Obtain gasPrice from the transaction
-      const trx = await web3.eth.getTransaction(tx.receipt.transactionHash);
-      const beneficiaryNewBalance = await web3.eth.getBalance(benificiary);
+  it("should be able to withdraw using withdraw()", async () => {
+    const beneficiaryBalance = await web3.eth.getBalance(beneficiary);
+    const faucetBalance = await web3.eth.getBalance(facuetInstance.address);
+    const tx = await facuetInstance.withdraw(
+      web3.utils.toBN(withdrawalAmount),
+      { from: beneficiary }
+    );
 
-      const calculatedBenificiaryBalance = web3.utils
-        .toBN(beneficiaryBalance)
-        .add(web3.utils.toBN(withdrawalAmount))
-        .sub(
-          web3.utils.toBN(tx.receipt.gasUsed).mul(web3.utils.toBN(trx.gasPrice))
-        )
-        .toString();
-      truffleAssert.eventEmitted(tx, "Withdrawal", (obj) => {
-        return (
-          obj.to === benificiary &&
-          new BigNumber(obj.amount).isEqualTo(web3.utils.toBN(withdrawalAmount))
-        );
-      });
-      assert.equal(
-        beneficiaryNewBalance,
-        calculatedBenificiaryBalance,
-        "It should be equal"
+    // Obtain the gasprice
+    const trx = await web3.eth.getTransaction(tx.receipt.transactionHash);
+    const transactionFee = web3.utils
+      .toBN(trx.gasPrice)
+      .mul(web3.utils.toBN(tx.receipt.gasUsed));
+    const beneficiaryNewBalance = await web3.eth.getBalance(beneficiary);
+    const faucetNewBalance = await web3.eth.getBalance(facuetInstance.address);
+    const calculatedFaucetBalance = web3.utils.toBN(faucetBalance).sub(web3.utils.toBN(withdrawalAmount));
+    const calculatedBeneficiaryBalance = web3.utils
+      .toBN(beneficiaryBalance)
+      .add(web3.utils.toBN(withdrawalAmount))
+      .sub(transactionFee)
+      .toString();
+
+    assert.equal(
+      beneficiaryNewBalance,
+      calculatedBeneficiaryBalance,
+      "the beneficiary balance is not as expected"
+    );
+    assert.equal(faucetNewBalance,calculatedFaucetBalance,"The contract balance is not as expected.")
+    truffleAssert.eventEmitted(tx, "Withdrawal", (obj) => {
+      return (
+        obj.to === beneficiary &&
+        new BigNumber(obj.amount).isEqualTo(new BigNumber(withdrawalAmount))
       );
     });
   });
-  describe("negative", () => {
-    it("it should revert on withdraw if exceeds contract balance", async () => {
-      await truffleAssert.reverts(
-        faucetInstance.withdraw(web3.utils.toBN(refillAmount), {
-          from: benificiary,
-        }),
-        "Faucet: Insufficient balance for withdrawal request"
-      );
-    });
+
+  it("should revert on withdraw if amount exceed the contract balance", async () => {
+    const withdrawalAmount = web3.utils.toBN(refillAmount).add(web3.utils.toBN(2000));
+    await truffleAssert.reverts(
+      facuetInstance.withdraw(withdrawalAmount, { from: beneficiary }),
+      "Faucet: Insufficient balance for withdrawal request"
+    );
   });
 });
