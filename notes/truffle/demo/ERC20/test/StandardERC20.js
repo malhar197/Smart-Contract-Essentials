@@ -12,6 +12,7 @@ contract("StandardERC20", (accounts) => {
   const spender = accounts[2];
   const spenderAmount = web3.utils.toBN(300000000000000000);
   const receipient2 = accounts[3];
+  const receipient2Amount = web3.utils.toBN(8000000000000000);
   let standardERC20Instance;
   before(async () => {
     standardERC20Instance = await StandardERC20.deployed();
@@ -135,5 +136,90 @@ contract("StandardERC20", (accounts) => {
       ),
       "The receipient1's balance is not as expected"
     );
+  });
+
+  it("test increaseAllowance()", async () => {
+    const spenderAllowance1 = await standardERC20Instance.allowance.call(
+      creator,
+      spender
+    );
+
+    const increaseTx = await standardERC20Instance.increaseAllowance(
+      spender,
+      spenderAmount,
+      { from: creator }
+    );
+
+    const spenderAllowance2 = await standardERC20Instance.allowance.call(
+      creator,
+      spender
+    );
+
+    assert(
+      new BigNumber(spenderAllowance2).gt(
+        new BigNumber(spenderAllowance1)
+      ),
+      "Allowance before does not match allowance after"
+    );
+
+    assert(
+      new BigNumber(spenderAllowance2).minus(
+        new BigNumber(spenderAmount).eq(new BigNumber(spenderAllowance1))
+      ),
+      "Amount added is not as expected"
+    );
+
+    truffleAssert.eventEmitted(increaseTx, "Approval", (obj) => {
+      return (
+        obj.owner === creator &&
+        obj.spender === spender &&
+        new BigNumber(spenderAllowance1)
+          .plus(spenderAmount)
+          .isEqualTo(new BigNumber(obj.value))
+      );
+    });
+  });
+
+  
+  it("test decreaseAllowance()", async () => {
+    const spenderAllowance1 = await standardERC20Instance.allowance.call(
+      creator,
+      spender
+    );
+
+    const decreaseTx = await standardERC20Instance.decreaseAllowance(
+      spender,
+      spenderAmount,
+      { from: creator }
+    );
+
+    const spenderAllowance2 = await standardERC20Instance.allowance.call(
+      creator,
+      spender
+    );
+
+    assert(
+      new BigNumber(spenderAllowance2).lt(
+        new BigNumber(spenderAllowance1)
+      ),
+      "Allowance before does not match allowance after"
+    );
+
+    assert(
+      new BigNumber(spenderAllowance2).plus(
+        new BigNumber(spenderAmount).eq(new BigNumber(spenderAllowance1))
+      ),
+      "Amount added is not as expected"
+    );
+
+    truffleAssert.eventEmitted(decreaseTx, "Approval", (obj) => {
+      return (
+        obj.owner === creator &&
+        obj.spender === spender &&
+        new BigNumber(spenderAllowance1)
+          .minus(spenderAmount)
+          .isEqualTo(new BigNumber(obj.value))
+      );
+    });
   });
 });

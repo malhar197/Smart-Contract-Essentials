@@ -155,4 +155,22 @@ contract StandardERC20 is IERC20 {
       _allowances[owner][spender] = amount;
       emit Approval(owner, spender, amount);
     }
+
+    function increaseAllowance(address spender, uint256 addedValue) public returns(bool){
+    require(spender != address(0),"ERC20: spender address can not be zero");
+    uint256 currentValue =_allowances[msg.sender][spender];
+    require( addedValue > 0,"Requested Increase Allowance should be greater than zero");
+    _allowances[msg.sender][spender]=currentValue+addedValue; 
+    emit Approval(msg.sender, spender, _allowances[msg.sender][spender]);
+    return true;
+  }
+    function decreaseAllowance(address spender,uint256 subtractedValue) public returns (bool)
+  {
+    require(spender != address(0),"ERC20: spender address can not be zero");
+    uint256 currentValue = _allowances[msg.sender][spender];
+    require(subtractedValue <= currentValue,"Requested Decrease Allowance should be less than current allowance");
+    _allowances[msg.sender][spender]=currentValue-subtractedValue;
+    emit Approval(msg.sender, spender, _allowances[msg.sender][spender]);
+    return true;
+  }
 }
